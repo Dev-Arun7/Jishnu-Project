@@ -1,0 +1,129 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main pages">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
+            </div>
+        </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link"  href="{% url 'core:dashboard' %}"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        </li>
+                                        
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="tab-content account dashboard-content pl-50">
+
+                                    <div class="tab-pane fade active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="mb-0">Your Orders</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order INV</th>
+                                                                <th>Image</th>
+                                                                <th>Title</th>
+                                                                <th>Price</th>
+                                                                <th>Qty</th>
+                                                                <th>Total</th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for o in products %}
+                                                            <tr>
+                                                                <td>INV-{{o.id}}</td>
+                                                                <td>
+                                                                    <p><img src="{{ o.image }}" style="width: 60px; height: 60px; object-fit: cover;" alt=""></p>
+                                                                </td>
+
+                                                                <td>{{o.item}}</td>
+                                                                <td>{{o.price}}</td>
+                                                                
+                                                                <td>{{o.qty}}</td>
+                                                                <td>{{ o.total }}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            
+                                            </div>
+                                            
+                                            
+                                            {% if order.product_status == 'delivered' %}
+                                            <button class="return-button"><a href="{% url 'core:return_product' order.id %}">Return</a></button>
+                                            {% elif order.product_status == 'processing' %}
+                                            <button class="cancel-button"><a href="{% url 'core:cancel_product' order.id %}">Cancel</a></button>
+                                            {% endif %}
+                                        
+
+
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+    <style>
+        .return-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    
+        .cancel-button {
+            background-color: #f44336; /* Red */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+    
+{% endblock content %}

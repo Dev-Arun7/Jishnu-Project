@@ -1,0 +1,209 @@
+{%  extends 'partials/base.html'%}
+{% load static %}
+{% block content%}
+    
+    <main class="main">
+        <div class="container mb-30">
+            <div class="row flex-row-reverse">
+                <div class="col-lg-4-5">
+                    <section class="home-slider position-relative mb-30">
+                        <div class="home-slide-cover mt-30">
+                            <div class="hero-slider-1 style-4 dot-style-1 dot-style-1-position-1">
+                                {% for banner in banner_img%}
+                                <div class="single-hero-slider single-animation-wrap" style="background-image: url({{banner.images.url}})">
+                                    {% if forloop.counter == 1 %}
+                                    <div class="slider-content">
+                                        <form class="form-subcriber d-flex">
+                                            <input type="email" placeholder="Your emaill address" />
+                                            <button class="btn" type="submit">Subscribe</button>
+                                        </form>
+                                    </div>
+                                    {% endif%}
+                                </div>o
+                                {% endfor %}
+                            </div>
+                            
+
+
+                            <div class="slider-arrow hero-slider-1-arrow"></div>
+                        </div>
+                    </section>
+                    <!--End hero-->
+                    <section class="product-tabs section-padding position-relative">
+                        <div class="section-title style-2">
+                            <h3>Popular Products</h3>
+                            <ul class="nav nav-tabs links" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">All</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two" type="button" role="tab" aria-controls="tab-two" aria-selected="false">Milks & Dairies</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three" type="button" role="tab" aria-controls="tab-three" aria-selected="false">Coffes & Teas</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-four" data-bs-toggle="tab" data-bs-target="#tab-four" type="button" role="tab" aria-controls="tab-four" aria-selected="false">Pet Foods</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-five" data-bs-toggle="tab" data-bs-target="#tab-five" type="button" role="tab" aria-controls="tab-five" aria-selected="false">Meats</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-six" data-bs-toggle="tab" data-bs-target="#tab-six" type="button" role="tab" aria-controls="tab-six" aria-selected="false">Vegetables</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-seven" data-bs-toggle="tab" data-bs-target="#tab-seven" type="button" role="tab" aria-controls="tab-seven" aria-selected="false">Fruits</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--End nav-tabs-->
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+                                <div class="row product-grid-4">
+                                  {% for p in product  %}
+                                    <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 ">
+                                        <div class="product-cart-wrap mb-30">
+                                            <div class="product-img-action-wrap">
+                                                <div class="product-img product-img-zoom" style="max-height: 150px;">
+                                                    <a href="{% url 'core:product_detail' p.pid %}">
+                                                        <img class="default-img " src="{{ p.image.url }}" alt="" />
+                                                        <img class="hover-img" src="{{ p.image.url }}" alt="" />
+                                                    </a>
+                                                </div>
+                                                <div class="product-action-1">
+                                                    <a aria-label="Add To Wishlist" class="action-btn" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                   
+                                                </div>
+                                                <div class="product-badges product-badges-position product-badges-mrg">
+                                                    <span class="hot">Hot</span>
+                                                </div>
+                                            </div>
+                                            <div class="product-content-wrap">
+                                                <div class="product-category">
+                                                    <a href="shop-grid-right.html">{{p.category }}</a>
+                                                </div>
+                                                <h2><a href="shop-product-right.html">{{ p.title }}</a></h2>
+                                                <div class="product-rate-cover">
+                                                    <div class="product-rate d-inline-block">
+                                                        <div class="product-rating" style="width: 90%"></div>
+                                                    </div>
+                                                    <span class="font-small ml-5 text-muted"> (4.0)</span>
+                                                </div>
+                                                <div>
+                                                    <span class="font-small text-muted">By <a href="vendor-details-1.html">{{p.vendor}}</a></span>
+                                                </div>
+                                                <div class="product-card-bottom">
+                                                    <div class="product-price">
+                                                        <span class="current-price current-product-price-{{ p.id }}
+                                                           text-brand">{{p.price}}</span>
+
+                                                        <span class="old-price">{{ p.old_price}}</span>
+                                                    </div>
+                                                    <div class="add-cart">
+                                                        <!-- <form action="#" method="post"> -->
+                                                        {%csrf_token %}
+                                                        <input type="hidden" value="1" name="" id="product-quantity" class="w-25 mb-20 product-quantity-{{p.id}}">
+                                                        <input type="hidden" name="" id="" class="product-pid-{{p.id}}" value="{{p.pid}}" >
+                                                        <input type="hidden" name="" id="" class="product-title-{{p.id}}" value="{{p.title}}">
+                                                        <input type="hidden" name="" id="" class="product-image-{{p.id}}" value="{{p.image.url}}">
+                                                        <input type="hidden" name="" id="" class="product-id-{{p.id}}" value="{{p.id}}">
+                                                        <div class="d-flex">
+                                                            <button class="add b-none add-to-cart-btn" style="border: none;" data-index="{{ p.id }}"><i
+                                                                class="fi-rs-shopping-cart mr-5" class="add-to-cart-btn" ></i>Add </button>    
+                                                            <button  style="border: none; background: none;" id="addwish-index" data-product-item="{{p.id}}"><i
+                                                                class="fi-rs-heart" style="fill: rgb(166, 22, 22); "></i></button>
+                                                                
+                                                        </div>
+                                                        <!-- </form> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                </div>
+                                <!--End product-grid-4-->
+                            </div>
+                            <!--En tab -->
+                            
+                        </div>
+                        <!--End tab-content-->
+                    </section>
+                    
+                </div>
+                <div class="col-lg-1-5 primary-sidebar sticky-sidebar pt-30">
+                    <div class="sidebar-widget widget-category-2 mb-30">
+                       <a href="{% url 'core:categorie_list' %}"> <h5 class="section-title style-1 mb-30">Category</h5></a>
+                       {% for c in categories %} 
+                       <ul>
+                            <li>
+                                <a href="{% url 'core:categorie_product_list' c.cid %}"> <img src="{{c.image.url}}" alt=""><strong>{{ c.title }}</a><span class="count">{{c.category.count}}</span></strong>
+                            </li>
+                           
+                        </ul>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10">
+                        <h5 class="section-title style-1 mb-30">New Arrival</h5>
+                        {% for p in new_arrival|slice:":3" %}
+                        <div class="single-post clearfix">
+                            <div class="image">
+                                <a href="{% url 'core:product_detail' p.pid %}"><img src="{{p.image.url}}" alt="#" /></a>
+                            </div>
+                            <div class="content pt-10">
+                                <h5><a href="{% url 'core:product_detail' p.pid %}">{{p.title}}</a></h5>
+                                <p class="price mb-0 mt-5">{{p.price}}</p>
+                                <div class="product-rate">
+                                    <div class="product-rating" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                    <div class="banner-img wow fadeIn mb-lg-0 animated d-lg-block d-none">
+                        <img src="{% static 'assets/imgs/banner/b1.jpg' %}" alt="" />
+                        <div class="banner-text">
+                            <span>Oganic</span>
+                            <h4>
+                                Save 17% <br /> on <span class="text-brand">Oganic</span><br /> Juice
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Adding to wishlist
+    $(document).on("click", "#addwish-index", function(){
+        let product_id = $(this).attr("data-product-item")
+        let this_val = $(this)
+
+
+        console.log("PRoduct ID IS", product_id);
+
+        $.ajax({
+            url: "/add-to-wishlist",
+            data: {
+                "id": product_id
+            },
+            dataType: "json",
+            beforeSend: function(){
+                console.log("Adding to wishlist...")
+            },
+            success: function(response){
+                // this_val.html("✓")
+                this_val.html("<i class='fas fa-heart text-danger'></i>")
+                if (response.bool === true) {
+                    console.log("Added to wishlist...");
+                }
+            }
+        })
+    })
+    </script>
+    
+    {% endblock content%}
+    

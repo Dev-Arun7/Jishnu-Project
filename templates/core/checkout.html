@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>DailyMart - Multipurpose eCommerce HTML Template</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/imgs/theme/dailymartlogo.png'%}" />
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/slider-range.css'%}" />
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- font -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>  
+   <main class="main">
+       <div class="page-header breadcrumb-wrap">
+           <div class="container">
+               <div class="breadcrumb">
+                   <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                   <span></span> Shop
+                   <span></span> Checkout
+               </div>
+           </div>
+       </div>
+       <div class="container mb-80 mt-50">
+           <div class="row">
+               <div class="col-lg-8 mb-40">
+                   <h1 class="heading-2 mb-10">Checkout</h1>
+                   <div class="d-flex justify-content-between">
+                       <h6 class="text-body">There are <span class="text-brand">{{ totalcartitems }}</span> products in your cart</h6>
+                   </div>
+               </div>
+           </div>
+           <div class="row">
+               <div class="col-lg-7">
+                   <div class="row mb-50">
+                       <div class="col-lg-6 mb-sm-15 mb-lg-0 mb-md-3">
+                           
+                           <div class="panel-collapse collapse login_form" id="loginform">
+                               <div class="panel-body">
+                                   <p class="mb-30 font-sm">If you have shopped with us before, please enter your details below. If you are a new customer, please proceed to the Billing &amp; Shipping section.</p>
+                                   <form method="post">
+                                       <div class="form-group">
+                                           <input type="text" name="email" placeholder="Username Or Email">
+                                       </div>
+                                       <div class="form-group">
+                                           <input type="password" name="password" placeholder="Password">
+                                       </div>
+                                       <div class="login_footer form-group">
+                                           <div class="chek-form">
+                                               <div class="custome-checkbox">
+                                                   <input class="form-check-input" type="checkbox" name="checkbox" id="remember" value="">
+                                                   <label class="form-check-label" for="remember"><span>Remember me</span></label>
+                                               </div>
+                                           </div>
+                                           <a href="#">Forgot password?</a>
+                                       </div>
+                                       <div class="form-group">
+                                           <button class="btn btn-md" name="login">Log in</button>
+                                       </div>
+                                   </form>
+                               </div>
+                           </div>
+                       </div>
+
+                   </div>
+
+                   <div class="row">
+                        <h4 class="mb-30">Billing Details</h4>
+                        <form method="post">
+                            {% csrf_token%}
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <input type="text" required="" name="fname" value="{{ request.user.username|title }}" placeholder="First name *">
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <input type="text" required="" name="lname" placeholder="mobile *" value="{{ active_address.mobile }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    <input type="text" name="billing_address" value="{{ active_address.address }}" required="" placeholder="Address *">
+                                </div>
+                                
+                            </div>
+                         
+                        </form>
+                    </div>
+                   
+               </div>
+               <div class="col-lg-5">
+                   <div class="border p-40 cart-totals ml-30 mb-50">
+                       <div class="d-flex align-items-end justify-content-between mb-30">
+                           <h4>Your Order</h4>
+                           <h6 class="text-brand-bold">Subtotal :<h4 class="text-brand text-end">{{cart_total_amount|floatformat:2}}</h4></h6>
+                       </div>
+                       <div class="divider-2 mb-30"></div>
+                       <div class="table-responsive order_table checkout">
+                        <a href="{%url 'core:cart' %}" class="btn btn-fill-out btn-block mt-0 mb-15">Back to cart <i class="fi-rs-sign-in ml-15"></i></a>
+                           <table class="table no-border">
+                            
+                               <tbody>
+                                {% for product_id,item in cart_data.items %}
+                                   <tr>
+                                       <!-- <td class="image product-thumbnail"><img src="{% static '{{ item.image }}' %}" alt="#"></td> -->
+                                       <td>
+                                           <h6 class="w-160 mb-5"><a href="{% url 'core:product_detail' item.pid %}" class="text-heading">{{ item.title}}</a></h6></span>
+                                        
+                                       </td>
+                                       <td>
+                                           <h6 class="text-danger pl-20 pr-20">x{{item.qty}}</h6>
+                                       </td>
+                                       <td>
+                                           <h6 class="text-muted">{{item.price}}</h6>
+                                       </td>
+                                       <td>
+                                        <h4 class="text-brand">{% widthratio item.price 1 item.qty %}</h4>
+                                    </td>
+                                   </tr>
+                                {% endfor%}
+                               </tbody>
+                           </table>
+                       </div>
+                   </div>
+                   <form id="paymentForm" method="POST" action="{% url 'core:cod' %}">
+                    {% csrf_token %}
+                    <div class="payment ml-30">
+                        <h4 class="mb-30">Payment</h4>
+                        <div class="payment_option">
+                            <button type="submit" name="payment_method" value="cod" class="btn btn-success w-100">COD | Place Order</button>
+                            <button type="button" id="rzp-button1" class="btn btn-primary w-100 mt-2">Pay With Razorpay</button>
+                        </div>
+                    </div>
+                </form>
+                
+               </div>
+           </div>
+       </div>
+   </main>
+   
+   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+   <script src="../../static/assets/js/checkout.js"></script>
+</html>

@@ -1,0 +1,132 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-v4-grid-only@1.0.0/dist/bootstrap-grid.min.css">-->
+{% endblock %}
+
+{% block content %}
+<style>
+#submit {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: 0 -15px 20px -10px rgb(0 0 0 / 15%) inset;
+    padding: 7px 13px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+}
+.half_size {
+    width: 50%;
+}
+.full_size {
+    width: 100%;
+}
+.column {
+    float: left;
+}
+#filterForm > div {
+    display: contents;
+    padding-bottom: 10px;
+}
+@media screen and (max-width: 800px) {
+    .column {
+      float: none;
+      width: 100% !important;
+    }
+    #filterForm > div {
+      display: block;
+      padding-bottom: 10px;
+    }
+}
+
+.container .row .column {
+    margin-bottom: 10px;
+}
+
+#content-main {
+    margin-top: 20px;
+}
+
+</style>
+{% block css %} {% endblock %}
+<div class="container">
+    <div class="row">
+        <div>
+            <form id="filterForm">
+                {% block filter_form %} {% endblock %}
+            </form>
+        </div>
+        <div>
+            {% block chart %} {% endblock %}
+        </div>
+    </div>
+</div>
+{{ block.super }}
+<script>
+class PyChart {
+
+  constructor() {}
+
+  get_end_point(url){
+    return url;
+  }
+
+  get_chart(id, type="bar"){
+    var id = document.getElementById(id).getContext("2d");
+    return new Chart(id, {
+      type: type,
+      // type: "line",
+      options: {
+        responsive: true,
+      }
+    });
+  }
+
+  get_filter(url, call){
+    $.ajax({
+      url: url,
+      type: "GET",
+      dataType: "json",
+      success: (jsonResponse) => {
+        call(jsonResponse);
+      },
+      error: () => console.log("Failed to fetch chart filter options!")
+    });
+  }
+
+  loadChart(chart, endpoint) {
+    $.ajax({
+      url: endpoint,
+      type: "GET",
+      dataType: "json",
+      success: (jsonResponse) => {
+        // Extract data from the response
+        const title = jsonResponse.title;
+        const labels = jsonResponse.data.labels;
+        const datasets = jsonResponse.data.datasets;
+
+        // Reset the current chart
+        chart.data.datasets = [];
+        chart.data.labels = [];
+
+        // Load new data into the chart
+        chart.options.title.text = title;
+        chart.options.title.display = true;
+        chart.data.labels = labels;
+        datasets.forEach(dataset => {
+          chart.data.datasets.push(dataset);
+        });
+        chart.update();
+      },
+      error: () => console.log("Failed to fetch chart data from " + endpoint + "!")
+    });
+  }
+}
+
+</script>
+{% block js %} {% endblock %}
+
+{% endblock %}

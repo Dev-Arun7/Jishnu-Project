@@ -1,0 +1,77 @@
+{% extends "django_admin_chart/components/chart_statistics.html" %}
+{% block filter_form %}
+<div>
+  {% include "django_admin_chart/widgets/select.html" with id='year' label='Choose a year' %}
+</div>
+&nbsp;
+{% if select_filter %}
+<div>
+   {% include "django_admin_chart/widgets/select.html" with id=select_filter label="Choose a "|add:select_filter %}
+</div>
+&nbsp;
+{% endif %}
+<div>
+   {% include "django_admin_chart/widgets/button.html" with id='submit' type='submit' value='Load' %}
+</div>
+{% endblock %}
+
+{% block chart %} 
+<div class="column half_size">
+  {% include "django_admin_chart/widgets/chart_bar.html" with id='chart1' %}
+</div>
+<div class="column half_size">
+  {% include "django_admin_chart/widgets/chart_bar.html" with id='chart2' %}
+</div>
+<div>{{ my_param }}</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  $(document).ready(function() {
+    var pyChart = new PyChart();
+    var chart1 = pyChart.get_chart('chart1');
+    var chart2 = pyChart.get_chart('chart2');
+    var chart1EndPoint = pyChart.get_end_point(`{{ url }}`);
+    var chart2EndPoint = pyChart.get_end_point(`{{ url2 }}`);
+    pyChart.get_filter("{{ url_filter }}", (jsonResponse) => {
+        {% if select_filter %}
+            jsonResponse.years.forEach(option => {
+                $("#year").append(new Option(option, option));
+            });
+            const year = $("#year").children().first().val();
+            //
+            jsonResponse.{{ select_filter|add:"s" }}.forEach(option => {
+                $("#{{ select_filter }}").append(new Option(option.name, option.id));
+            });
+
+            const select = $("#{{ select_filter }}").children().first().val();
+            //
+            pyChart.loadChart(chart1, chart1EndPoint + `?year=${year}&{{ select_filter }}=${select}`);
+            pyChart.loadChart(chart2, chart2EndPoint + `?year=${year}&{{ select_filter }}=${select}`);
+        {% else %}
+            jsonResponse.years.forEach(option => {
+                $("#year").append(new Option(option, option));
+            });
+            const year = $("#year").children().first().val();
+            pyChart.loadChart(chart1, chart1EndPoint + `?year=${year}`);
+            pyChart.loadChart(chart2, chart2EndPoint + `?year=${year}`);
+        {% endif %}
+    });
+  
+
+    $("#filterForm").on("submit", (event) => {
+      event.preventDefault();
+      {% if select_filter %}
+        const year = $("#year").val();
+        const select = $("#{{ select_filter }}").val();
+        pyChart.loadChart(chart1, chart1EndPoint + `?year=${year}&{{ select_filter }}=${select}`);
+        pyChart.loadChart(chart2, chart2EndPoint + `?year=${year}&{{ select_filter }}=${select}`);
+      {% else %}
+        const year = $("#year").val();
+        pyChart.loadChart(chart1, chart1EndPoint + `?year=${year}`);
+        pyChart.loadChart(chart2, chart2EndPoint + `?year=${year}`);
+      {% endif %}
+    });
+  });
+</script>
+{% endblock %}
